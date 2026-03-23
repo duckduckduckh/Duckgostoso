@@ -1,0 +1,109 @@
+---------------------------------------------------
+-- RAYFIELD
+---------------------------------------------------
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+--// Serviços
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local VirtualUser = game:GetService("VirtualUser")
+
+--// Remoto
+local ClaimReward = ReplicatedStorage
+:WaitForChild("Packages")
+:WaitForChild("_Index")
+:WaitForChild("sleitnick_knit@1.7.0")
+:WaitForChild("tricotar")
+:WaitForChild("Services")
+:WaitForChild("ChallengeService")
+:WaitForChild("RF")
+:WaitForChild("ClaimReward")
+
+--// Janela
+local Window = Rayfield:CreateWindow({
+    Nome = "Loja de Patos 🦆",
+    LoadingTitle = "Método Lucky Spin",
+    CarregandoSubtítulo = "por Duck 🔰",
+    SalvamentoDeConfiguração = { Ativado = falso }
+})
+
+--// Abas
+local MainTab = Window:CreateTab("🎰 Giros da Sorte", nil)
+local CreditsTab = Window:CreateTab("👤 Créditos", nil)
+
+---------------------------------------------------
+-- Temporizador
+---------------------------------------------------
+local startTime = tick()
+local TimerLabel = MainTab:CreateLabel("⏱️ Tempo ativo: 00:00:00")
+
+tarefa.spawn(função()
+    enquanto verdadeiro faz
+        local decorrido = math.floor(tick() - startTime)
+
+        local h = math.floor(tempo decorrido / 3600)
+        local m = math.floor((tempo decorrido % 3600) / 60)
+        local s = tempo decorrido % 60
+
+        TimerLabel:Set(string.format("⏱️ Tempo ativo: %02d:%02d:%02d", h, m, s))
+        tarefa.esperar(1)
+    fim
+fim)
+
+---------------------------------------------------
+-- Automação
+---------------------------------------------------
+MainTab:CreateSection("⚙️ Automação")
+
+local ativo = falso
+local antiAfk = falso
+
+AbaPrincipal:CriarAlternância({
+    Nome = "Reivindicação Automática de Recompensa",
+    ValorAtual = falso,
+    Callback = função(Valor)
+        ativo = Valor
+    fim,
+})
+
+AbaPrincipal:CriarAlternância({
+    Nome = "Anti-AFK",
+    ValorAtual = falso,
+    Callback = função(Valor)
+        antiAfk = Valor
+    fim,
+})
+
+---------------------------------------------------
+-- Créditos
+---------------------------------------------------
+Aba Créditos:CriarSeção("👑 Créditos")
+Aba Créditos:Criar Rótulo("Pato")
+Aba Créditos:Criar Rótulo("Alvz")
+
+---------------------------------------------------
+-- Anti AFK
+---------------------------------------------------
+jogador.Ocioso:Conectar(função()
+    se for anti-AFK então
+        VirtualUser:Button2Down(Vector2.new(), workspace.CurrentCamera.CFrame)
+        tarefa.esperar(1)
+        VirtualUser:Button2Up(Vector2.new(), workspace.CurrentCamera.CFrame)
+    fim
+fim)
+
+---------------------------------------------------
+-- Princípio do laço
+---------------------------------------------------
+tarefa.spawn(função()
+    local i = 1
+
+    enquanto verdadeiro faz
+        se ativo então
+            pcall(função()
+                ReivindicarRecompensa:InvocarServidor(i)
+            fim)
+            i += 1
+        fim
+        tarefa.esperar()
+    fim
+fim)
